@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Rocio ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* --- CONTROL DE MÚSICA --- */
+        .music-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mute-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            color: #ff4b6a;
+        }
+
+        #vol-slider {
+            width: 70px;
+            cursor: pointer;
+            accent-color: #ff4b6a;
+        }
+
+        /* --- TARJETA PRINCIPAL --- */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            margin: 20px;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff4b6a;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .highlight {
+            color: #ff4b6a;
+            font-weight: bold;
+        }
+
+        /* --- CONTADOR --- */
+        #timer {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: #ff4b6a;
+            color: white;
+            padding: 8px 5px;
+            border-radius: 8px;
+            min-width: 55px;
+            flex: 1;
+            box-shadow: 0 4px 10px rgba(255, 75, 106, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-val {
+            font-size: 1.3em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .time-label {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            margin-top: 3px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            background-color: #ff4b6a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 75, 106, 0.4);
+            width: auto;
+            max-width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .surprise-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            border: 4px solid #fff;
+            display: block;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .date-badge {
+            background: #ffecf0;
+            color: #ff4b6a;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .heart-bg {
+            position: absolute;
+            color: #fff;
+            opacity: 0.6;
+            animation: float 6s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 25px 20px; width: 88%; }
+            h1 { font-size: 1.8em; }
+            p { font-size: 1em; margin-bottom: 20px; }
+            .time-box { min-width: 45px; padding: 6px 2px; }
+            .time-val { font-size: 1.1em; }
+            .time-label { font-size: 0.55em; }
+            .btn { width: 100%; padding: 14px; }
+            .music-controls { top: 15px; right: 15px; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop autoplay>
+        <source src="./assets/musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="sfx-sorpresa">
+        <source src="./assets/sorpresa.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-controls">
+        <button id="mute-btn" class="mute-btn">
+            <svg id="icon-vol-on" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+            <svg id="icon-vol-off" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        </button>
+        <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
+    <div id="hearts-container"></div>
+
+    <div class="card">
+ <div id="slide1" class="slide active">
+            <h1>Hola mi amor ❤️</h1>
+            <p>Hoy quiero darte un humilde regalo...</p>
+            <button class="btn" onclick="nextSlide(2)">¿Qué cosa?</button>
+        </div>
+
+        <div id="slide2" class="slide">
+            <h1>Llevamos juntos...</h1>
+            
+            <div id="timer">
+                <div class="time-box">
+                    <span class="time-val" id="years">0</span>
+                    <span class="time-label">Años</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="days">0</span>
+                    <span class="time-label">Días</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="hours">0</span>
+                    <span class="time-label">Hrs</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="minutes">0</span>
+                    <span class="time-label">Min</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="seconds">0</span>
+                    <span class="time-label">Seg</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.9em;">Esta cantidad de tiempo es en el que tuve la suerte de compartir mi vida con la persona más hermosa, capaz, resiliente y disciplinada, a quien tuve el privilegio de conocer. ✨❤️</p>
+            <button class="btn" onclick="nextSlide(3)">Continuar...</button>
+        </div>
+
+        <div id="slide3" class="slide">
+            <h1>Sos el amor de mi vida</h1>
+            <p>
+            Gracias por elegirme cada día, por tenerme paciencia, por confiar en mí, por apoyarme y por compartir tus sueños conmigo,
+            Y aunque a veces me cueste, gracias por enseñarme a ser mejor, a ser más paciente, más amoroso y un poco mas sociable 😅.
+            </p>
+            <p>Estoy tardando un poco.. Pero voy a hacer lo que sea necesario para darte la vida que te mereces ❤️</p>
+            <button class="btn" onclick="nextSlide(4)">Y También...</button>
+        </div>
+
+          <div id="slide4" class="slide">
+            <h1>Sueño...</h1>
+            <p>con seguir compartiendo nuestra vida, construyendo una historia que sea solo nuestra, formando una familia, viendo crecer a nuestros hijos y aprendiendo juntos en cada etapa. Quiero que sigamos eligiéndonos todos los días, hasta llegar a viejitos, mirando hacia atrás y sintiendo orgullo de todo lo que construimos juntos. 👨‍👩‍👧‍👦🐱❤️</p>
+            <p style="font-size: 0.95em;">Ahora quiero que abras este regalo ❤️</p>
+            <button class="btn" onclick="nextSlide(5)">Abrir Regalo 🎁</button>
+        </div>
+
+        <div id="slide5" class="slide">
+            <h1>Feliz San Valentin!! ❤️</h1>
+            <img src="./assets/merlin.png" alt="Gato Merlin" class="surprise-img">
+            <p>Sorpresa!!! papá me dijo que te trajera estas flores, Te amamos para siempre ❤️🐱🌹</p>
+            
+            <p style="font-size: 0.8em; color: #aaa;">Amandote desde el 22/03/2018 como el primer dia...</p>
+        </div>
+    </div>
+
+    <script>
+        const startDate = new Date("2018-03-22T00:00:00");
+        const audio = document.getElementById('bg-music');
+        const sfxSorpresa = document.getElementById('sfx-sorpresa');
+
+        // --- AUTOPLAY INTELIGENTE ---
+        window.addEventListener('load', () => {
+            audio.play().catch(e => console.log("Esperando interacción."));
+        });
+        document.body.addEventListener('click', () => {
+            if(audio.paused) { audio.play(); }
+        }, { once: true });
+
+        // --- TIMER ---
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            // Seguridad: si los elementos existen (por si se borran)
+            if(document.getElementById("years")) {
+                document.getElementById("years").innerText = years;
+                document.getElementById("days").innerText = days;
+                document.getElementById("hours").innerText = hours;
+                document.getElementById("minutes").innerText = minutes;
+                document.getElementById("seconds").innerText = seconds;
+            }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // --- CONTROLES DE MÚSICA ---
+        const muteBtn = document.getElementById('mute-btn');
+        const volSlider = document.getElementById('vol-slider');
+        const iconOn = document.getElementById('icon-vol-on');
+        const iconOff = document.getElementById('icon-vol-off');
+        audio.volume = 0.5; 
+
+        muteBtn.addEventListener('click', () => {
+            if (audio.muted) {
+                audio.muted = false;
+                iconOn.style.display = 'block';
+                iconOff.style.display = 'none';
+                if (audio.volume === 0) { audio.volume = 0.5; volSlider.value = 0.5; }
+            } else {
+                audio.muted = true;
+                iconOn.style.display = 'none';
+                iconOff.style.display = 'block';
+            }
+        });
+
+        volSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            audio.volume = val;
+            if (val == 0) {
+                audio.muted = true;
+                iconOn.style.display = 'none';
+                iconOff.style.display = 'block';
+            } else {
+                audio.muted = false;
+                iconOn.style.display = 'block';
+                iconOff.style.display = 'none';
+            }
+        });
+
+        // --- NAVEGACIÓN Y EFECTOS ---
+        function nextSlide(slideNumber) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById('slide' + slideNumber).classList.add('active');
+
+            // SLIDE 4: SORPRESA FINAL
+            if (slideNumber === 5) {
+                createManyHearts();
+                // Reproducir sonido de sorpresa
+                sfxSorpresa.volume = 1.0; // Volumen al máximo para el efecto
+                sfxSorpresa.play().catch(e => console.log("Error al reproducir sfx"));
+            }
+        }
+
+        // --- CORAZONES ---
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart-bg');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+            container.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+        setInterval(createHearts, 400);
+        function createManyHearts() {
+            for(let i=0; i<40; i++) setTimeout(createHearts, i * 80);
+        }
+    </script>
+</body>
+</html>
